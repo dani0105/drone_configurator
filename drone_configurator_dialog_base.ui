@@ -66,6 +66,9 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="editable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="labelDrone">
     <property name="geometry">
@@ -133,7 +136,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBoxDrone_2">
+   <widget class="QComboBox" name="comboBoxCapas">
     <property name="geometry">
      <rect>
       <x>280</x>
