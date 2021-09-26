@@ -180,6 +180,21 @@ class Drone:
             self.iface.removeToolBarIcon(action)
 
 
+    def openConnection(self):
+        uri = QgsDataSourceUri()
+        uri.setConnection("leoviquez.com",
+                          "5432",
+                          "gis",
+                          "gis",
+                          "12345")
+        return uri
+
+
+    def closeConnection(self, connection):
+        # no sé si este método existe XD
+        connection.close()
+
+
     def run(self):
         """Run method that performs all the real work"""
 
@@ -190,7 +205,16 @@ class Drone:
             self.dlg = DroneDialog()
 
         # show the dialog
+
         self.dlg.show()
+        # Ejemplo para añadir elementos al comboBox
+        '''
+            x = ["asdfjasdf", "asdf", "jaja", "asdf"]
+            self.dlg.comboBoxProductos.insertItems(0,x)
+        '''
+        self.dlg.comboBoxProductos.clear()
+
+
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
