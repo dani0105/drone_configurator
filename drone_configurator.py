@@ -154,23 +154,43 @@ class Drone:
     def getSelectedArea(self):
         """ Get total area from one layer or the diference between current layer and other layeres """
         canvas = iface.mapCanvas()
+
         layers = canvas.layers()
         currentLayer = canvas.currentLayer()
-        totalCurrentLayer = 0
-        totalLayers = 0
+        # get a geom from all features selectected in current layer
+        geom1 = self.getGeomFromSelectedFeatures(currentLayer.selectedFeatures())
+        
+        # get a geom from all features selectected in anothers layers
+        geom2 = None
         for layer in layers:
             if(layer != currentLayer):
-                totalLayers += self.getAreaFromSelectedFeatures(layer.selectedFeatures())
+                if(geom2 == None):
+                    geom2 = self.getGeomFromSelectedFeatures(layer.selectedFeatures())
+                else:
+                    geom2.combine(self.getGeomFromSelectedFeatures(layer.selectedFeatures()))
+        
+        # there are not geoms selected in current layer
+        if(geom1 == None):
+            return 0
 
-        totalCurrentLayer += self.getAreaFromSelectedFeatures(currentLayer.selectedFeatures())
-        return abs(totalCurrentLayer-totalLayers)
+        # only select geoms from current layer
+        if(geom2 == None):
+            return geom1.area()
 
-    def getAreaFromSelectedFeatures(self,features):
-        """ Get total area from selected features"""
-        total = 0
-        for feature in features:
-            total += feature.geometry().area()
-        return total
+        # get diference between geom1(currentLayer) and geom2(other leyers)
+        resultGeom = geom1.difference(geom2)
+        
+        return resultGeom.area()
+
+    def getGeomFromSelectedFeatures(self,features):
+        """ Get a single geom from features list"""
+        geom = None
+        for feat in features:
+            if geom == None:
+                geom = feat.geometry()
+            else:
+                geom = geom.combine(feat.geometry())
+        return geom
 
 
     def openConnection(self):
@@ -200,6 +220,7 @@ class Drone:
         # show the dialog
 
         self.dlg.show()
+        self.getSelectedArea()
         # Ejemplo para añadir elementos al comboBox
         '''
             x = ["asdfjasdf", "asdf", "jaja", "asdf"]
