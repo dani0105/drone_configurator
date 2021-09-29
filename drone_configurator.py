@@ -1,12 +1,15 @@
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.core import QgsProviderRegistry
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 from qgis.utils import iface
 from .resources import *
 from .drone_configurator_dialog import DroneDialog
 import os.path
+import os
 
 class Drone:
+    
 
     def __init__(self, iface):
         """Constructor.
@@ -21,7 +24,12 @@ class Drone:
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        self.settings = QSettings()
+
+        self.pluginName = 'drone_configurator'
+
+        locale = self.settings.value('locale/userLocale')[0:2]
+
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
@@ -35,11 +43,12 @@ class Drone:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Drone Configurator')
-
+        # load 
+        self.connection = self.getConnection()
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
-
+        
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
 
@@ -54,6 +63,13 @@ class Drone:
 
         return QCoreApplication.translate('Drone', message)
 
+    def saveSetting(self,key,value):
+        """ this save plugin settings """
+        self.settings.setValue(self.pluginName+'/'+key,value)
+
+    def loadSetting(self,key):
+        """ this load plugin settings """
+        return self.settings.value(self.pluginName+'/'+key)
 
     def add_action(
         self,
@@ -192,21 +208,57 @@ class Drone:
                 geom = geom.combine(feat.geometry())
         return geom
 
+    def getDatabases(self):
+        """ Get list of database from QGIS """
+        return QgsProviderRegistry.instance().providerMetadata('postgres').connections()
+    
+    def getConnection(self):
+        """ 
+            get connection from the last database used or the first in the list
+        """
+        lastConnection = self.loadSetting('database')
+        connections = self.getDatabases()
+        if(len(connections) > 0):
+            if lastConnection: # se ha seleccionado previamente una base de datos
+                for key in connections:
+                    if key == lastConnection:
+                        return connections[key]
+            else:
+                keys = list(connections.keys())
+                connection = connections[keys[0]]
+                self.saveSetting('database',keys[0])
+                return connection
+        return None
 
-    def openConnection(self):
-        uri = QgsDataSourceUri()
-        uri.setConnection("leoviquez.com",
-                          "5432",
-                          "gis",
-                          "gis",
-                          "12345")
-        return uri
+    def changeDrone(self,index):
+        """ this function is called when the user select another drone """
+        drone = self.drones[index]
+        self.configurations = self.connection.execSql('select * from configuraciones where drone ='+ str(drone[0])).rows()
+        # fill the combobox with configurations for the selected drone
 
+    def changeDatabase(self,database):
+        """ this function is called when the user select another database """
+        # store the new database target
+        self.saveSetting('database',database)
+        # get new database connection
+        self.connection = self.getConnection()
+        # load basic data
+        self.initData()
 
-    def closeConnection(self, connection):
-        # no sé si este método existe XD
-        connection.close()
+    def initData(self):
+        """ charge the basic data form database when is first screen load or the database target change """
+        
+        #Verify if the tables exist in the database
+        existsDrones = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'drones');").rows()[0]
+        existsProducts = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'configuraciones');").rows()[0]
+        existsConfiguration = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'productos');").rows()[0]
+        
+        if existsDrones[0] and existsProducts[0] and existsConfiguration[0]:
+            self.drones = self.connection.execSql('select * from drones').rows() 
+            self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
 
+            for row in self.drones:
+                self.dlg.comboBoxDrone.addItem(row[2],row[0])
 
     def run(self):
         """Run method that performs all the real work"""
@@ -216,18 +268,13 @@ class Drone:
         if self.first_start == True:
             self.first_start = False
             self.dlg = DroneDialog()
+            self.databases = list(self.getDatabases().keys()) 
+            self.initData()
+
+        area = self.getSelectedArea()
 
         # show the dialog
-
         self.dlg.show()
-        self.getSelectedArea()
-        # Ejemplo para añadir elementos al comboBox
-        '''
-            x = ["asdfjasdf", "asdf", "jaja", "asdf"]
-            self.dlg.comboBoxProductos.insertItems(0,x)
-        '''
-        self.dlg.comboBoxProductos.clear()
-
 
         # Run the dialog event loop
         result = self.dlg.exec_()
