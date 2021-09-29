@@ -245,6 +245,10 @@ class Drone:
         # load basic data
         self.initData()
 
+
+    def fillDBCombo(self):
+        pass
+
     def initData(self):
         """ charge the basic data form database when is first screen load or the database target change """
         
@@ -268,7 +272,10 @@ class Drone:
         if self.first_start == True:
             self.first_start = False
             self.dlg = DroneDialog()
-            self.databases = list(self.getDatabases().keys()) 
+            self.databases = list(self.getDatabases().keys())
+            for row in self.databases:
+                self.dlg.comboBoxBaseDatos.addItem(row)
+            self.dlg.comboBoxBaseDatos.activated.connect(self.changeDatabase)
             self.initData()
 
         area = self.getSelectedArea()
