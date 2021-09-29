@@ -100,6 +100,9 @@
       <height>27</height>
      </rect>
     </property>
+    <property name="editable">
+     <bool>false</bool>
+    </property>
     <property name="insertPolicy">
      <enum>QComboBox::InsertAlphabetically</enum>
     </property>
@@ -123,7 +126,7 @@
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="labelBaseDatos">
@@ -180,7 +183,7 @@
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBoxConfiguracionDrone">
@@ -193,7 +196,7 @@
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="labelCultivo">
@@ -228,7 +231,7 @@
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
