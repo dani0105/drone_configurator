@@ -234,7 +234,11 @@ class Drone:
         """ this function is called when the user select another drone """
         drone = self.drones[index]
         self.configurations = self.connection.execSql('select * from configuraciones where drone ='+ str(drone[0])).rows()
+        self.dlg.comboBoxConfiguracionDrone.clear()
+
         # fill the combobox with configurations for the selected drone
+        for row in self.configurations:
+            self.dlg.comboBoxConfiguracionDrone.addItem("Altura: "+str(row[2]))
 
     def changeDatabase(self,database):
         """ this function is called when the user select another database """
@@ -246,21 +250,19 @@ class Drone:
         self.initData()
 
 
-    def fillDBCombo(self):
-        pass
-
     def initData(self):
         """ charge the basic data form database when is first screen load or the database target change """
         
         #Verify if the tables exist in the database
+        self.dlg.comboBoxDrone.clear()
+        self.dlg.comboBoxConfiguracionDrone.clear()
+
         existsDrones = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'drones');").rows()[0]
         existsProducts = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'configuraciones');").rows()[0]
         existsConfiguration = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'productos');").rows()[0]
         
         if existsDrones[0] and existsProducts[0] and existsConfiguration[0]:
             self.drones = self.connection.execSql('select * from drones').rows() 
-            self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
-
             for row in self.drones:
                 self.dlg.comboBoxDrone.addItem(row[2],row[0])
 
@@ -273,13 +275,17 @@ class Drone:
             self.first_start = False
             self.dlg = DroneDialog()
             self.databases = list(self.getDatabases().keys())
-            for row in self.databases:
+
+            self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
+            for i,row in enumerate(self.databases):
                 self.dlg.comboBoxBaseDatos.addItem(row)
-            self.dlg.comboBoxBaseDatos.activated.connect(self.changeDatabase)
+                if(row == self.loadSetting('database')):
+                    self.dlg.comboBoxBaseDatos.setCurrentIndex(i)
+            self.dlg.comboBoxBaseDatos.currentTextChanged.connect(self.changeDatabase)
             self.initData()
 
         area = self.getSelectedArea()
-
+        self.dlg.labelArea.setText("{:.2f}".format(round(area, 2)))
         # show the dialog
         self.dlg.show()
 
