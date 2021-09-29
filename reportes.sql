@@ -4,7 +4,7 @@ DECLARE
 	duracion double precision;
 	volumen double precision;
 BEGIN
-	SELECT configuraciones.volumen_descarga INTO STRICT volumen FROM public.configuraciones WHERE configuraciones.id = configID AND drone = droneID;
+	SELECT configuraciones.volumen_descarga INTO STRICT volumen FROM public.configuraciones WHERE configuraciones.id = configID AND configuraciones.drone = droneID;
 	SELECT drones.duracion_bateria INTO STRICT duracion FROM public.drones WHERE drones.id = droneID;
 	RETURN duracion * volumen;
 END;
