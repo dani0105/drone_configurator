@@ -227,7 +227,7 @@ class Drone:
                 keys = list(connections.keys())
                 connection = connections[keys[0]]
                 self.saveSetting('database',keys[0])
-                return connection
+                return connection   
         return None
 
     def changeDrone(self,index):
@@ -238,7 +238,8 @@ class Drone:
 
         # fill the combobox with configurations for the selected drone
         for row in self.configurations:
-            self.dlg.comboBoxConfiguracionDrone.addItem("Altura: "+str(row[2]))
+            print(row[2], row[3], row[4])
+            self.dlg.comboBoxConfiguracionDrone.addItem("Altura:{} Cobertura:{} Volumen:{}".format(row[2], row[3], row[4]))
 
     def changeDatabase(self,database):
         """ this function is called when the user select another database """
@@ -249,13 +250,20 @@ class Drone:
         # load basic data
         self.initData()
 
+    def changeCrop(self,crop):
+        self.products = self.connection.execSql("select * from productos where unaccent(cultivo) ilike unaccent('{}') order by ingrediente asc ".format(crop))
+        self.dlg.comboBoxProductos.clear()
+        for row in self.products:
+            self.dlg.comboBoxProductos.addItem(row[2],row[0])
 
     def initData(self):
         """ charge the basic data form database when is first screen load or the database target change """
         
         #Verify if the tables exist in the database
         self.dlg.comboBoxDrone.clear()
+        self.dlg.comboBoxCultivo.clear()
         self.dlg.comboBoxConfiguracionDrone.clear()
+        self.dlg.comboBoxProductos.clear()
 
         existsDrones = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'drones');").rows()[0]
         existsProducts = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'configuraciones');").rows()[0]
@@ -263,8 +271,17 @@ class Drone:
         
         if existsDrones[0] and existsProducts[0] and existsConfiguration[0]:
             self.drones = self.connection.execSql('select * from drones').rows() 
-            for row in self.drones:
+            self.crops = self.connection.execSql('select distinct unaccent(cultivo) as cultivo from productos order by cultivo asc ')
+            
+            for i,row in enumerate(self.drones):
+                if i == 0:
+                    self.changeDrone(i)
                 self.dlg.comboBoxDrone.addItem(row[2],row[0])
+
+            for i,row in enumerate(self.crops):
+                if i == 0:
+                    self.changeCrop(row[0])
+                self.dlg.comboBoxCultivo.addItem(row[0])
 
     def run(self):
         """Run method that performs all the real work"""
@@ -276,13 +293,16 @@ class Drone:
             self.dlg = DroneDialog()
             self.databases = list(self.getDatabases().keys())
 
-            self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
             for i,row in enumerate(self.databases):
                 self.dlg.comboBoxBaseDatos.addItem(row)
                 if(row == self.loadSetting('database')):
                     self.dlg.comboBoxBaseDatos.setCurrentIndex(i)
-            self.dlg.comboBoxBaseDatos.currentTextChanged.connect(self.changeDatabase)
+            
             self.initData()
+
+            self.dlg.comboBoxBaseDatos.currentTextChanged.connect(self.changeDatabase)
+            self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
+            self.dlg.comboBoxCultivo.currentTextChanged.connect(self.changeCrop)
 
         area = self.getSelectedArea()
         self.dlg.labelArea.setText("{:.2f}".format(round(area, 2)))
