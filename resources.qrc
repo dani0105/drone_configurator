@@ -1,5 +1,9 @@
 <RCC>
-    <qresource prefix="/plugins/drone_configurator" >
-        <file>icon.png</file>
-    </qresource>
+  <qresource prefix="/plugins/drone_configurator">
+    <file>icon.png</file>
+  </qresource>
+  <qresource prefix="background-image-win1">
+    <file>assets/drone-silhouette-2.png</file>
+    <file>assets/drone-silhouette-1.png</file>
+  </qresource>
 </RCC>

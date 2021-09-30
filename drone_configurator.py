@@ -268,16 +268,33 @@ class Drone:
 
 
     def displayResults(self):
+        # Create the secondary window
         self.ui2 = ResultsDialog()
-        prodsTan = self.report[4].split("{")[1].split("}")[0]
-        prodsHa = self.report[6].split("{")[1].split("}")[0]
-        prodsTot = self.report[8].split("{")[1].split("}")[0]
+
         # Place every data in the respective field
+        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + str(self.report[0]))
+        self.ui2.label_llenadasTanqueHa.setText(self.ui2.label_llenadasTanqueHa.text() + str(self.report[1]))
+        self.ui2.label_litrosAreaTot.setText(self.ui2.label_litrosAreaTot.text() + str(self.report[2]))
+        self.ui2.label_llenadasAreaTot.setText(self.ui2.label_llenadasAreaTot.text() + str(self.report[3]))
+
+            # Split the data to rearrange it and display it in the list
+        prodsTan = self.report[4].split("{")[1].split("}")[0]
         self.ui2.listWidget_totalProdsTanque.addItems(prodsTan.split(","))
+
+        self.ui2.label_aguaTanque.setText(self.ui2.label_aguaTanque.text() + str(self.report[5]))
+
+        prodsHa = self.report[6].split("{")[1].split("}")[0]
         self.ui2.listWidget_totalProdsHa.addItems(prodsHa.split(","))
+
+        self.ui2.label_aguaHa.setText(self.ui2.label_aguaHa.text() + str(self.report[7]))
+
+        prodsTot = self.report[8].split("{")[1].split("}")[0]
         self.ui2.listWidget_totalProdsAreaTot.addItems(prodsTot.split(","))
-        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + " funcionó") 
-        # self.dlg.labelConfiguracionDrone.setText("Fin de función")
+
+        self.ui2.label_aguaAreaTot.setText(self.ui2.label_aguaAreaTot.text() + str(self.report[9]))
+        self.ui2.label_descargasAreaTot.setText(self.ui2.label_descargasAreaTot.text() + str(self.report[10]))
+
+        # Show and execute the secondary window
         self.ui2.show()
         self.ui2.exec()
 
@@ -286,7 +303,7 @@ class Drone:
         """ send the data selected and generate report """
         if self.connection is not None:
             self.report = self.connection.execSql("select * from generarReportes({},{},Array{}::int[],{})".format(self.selectedConfiguration[0], self.selectedDrone[0], self.selectedProducts, self.area)).rows()[0]
-            print(self.report)
+            # Call secondary window to display the results
             self.displayResults()
 
     def changeProduct(self,data):
@@ -353,7 +370,6 @@ class Drone:
             self.dlg.buttonGenerate.clicked.connect(self.generateResults)
             self.dlg.comboBoxCultivo.activated.connect(self.changeCrop)
             self.dlg.comboBoxConfiguracionDrone.activated.connect(self.changeDroneConfiguration)
-            self.dlg.pushButtonPre.clicked.connect(self.displayResults)
 
         self.area = self.getSelectedArea()
         self.dlg.labelArea.setText("{:.2f}".format(round(self.area, 2)))
