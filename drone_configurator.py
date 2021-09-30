@@ -232,67 +232,85 @@ class Drone:
 
     def changeDrone(self,index):
         """ this function is called when the user select another drone """
-        drone = self.drones[index]
+        drone = self.selectedDrone = self.drones[index]
         self.configurations = self.connection.execSql('select * from configuraciones where drone ='+ str(drone[0])).rows()
         self.dlg.comboBoxConfiguracionDrone.clear()
 
         # fill the combobox with configurations for the selected drone
-        for row in self.configurations:
-            print(row[2], row[3], row[4])
+        for i,row in enumerate(self.configurations):
+            if i == 0:
+                self.changeDroneConfiguration(i)
             self.dlg.comboBoxConfiguracionDrone.addItem("Altura:{} Cobertura:{} Volumen:{}".format(row[2], row[3], row[4]))
 
     def changeDroneConfiguration(self,index):
-        # droneConfiguration, self.droneConfigurationID =
-        pass
+        """ the user selected the drone configuration"""
+        self.selectedConfiguration = self.configurations[index]
 
-    def changeDatabase(self,database):
+    def changeDatabase(self,index):
         """ this function is called when the user select another database """
         # store the new database target
-        self.saveSetting('database',database)
+        self.saveSetting('database',self.databases[index])
         # get new database connection
         self.connection = self.getConnection()
         # load basic data
         self.initData()
 
-    def changeCrop(self,crop):
-        self.products = self.connection.execSql("select * from productos where unaccent(cultivo) ilike unaccent('{}') order by ingrediente asc ".format(crop))
-        self.dlg.comboBoxProductos.clear()
-        for row in self.products:
-            self.dlg.comboBoxProductos.addItem(row[2],row[0])
+    def changeCrop(self,index):
+        """ the user selected the crop """
+        if self.connection is not None and len(self.crops) > 0:
+            crop = self.crops[index]
+            self.products = self.connection.execSql("select * from productos where unaccent(cultivo) ilike unaccent('{}') order by ingrediente asc ".format(crop[0])).rows()
+            self.dlg.comboBoxProductos.clear()
+            for row in self.products:
+                self.dlg.comboBoxProductos.addItem(row[2])
 
 
     def generateResults(self):
-        pass
+        """ send the data selected and generate report """
+        if self.connection is not None:
+            self.report = self.connection.execSql("select * from generarReportes({},{},Array{}::int[],{})".format(self.selectedConfiguration[0], self.selectedDrone[0], self.selectedProducts, self.area)).rows()[0]
+            print(self.report)
 
-    def enableGenerateResultButton(self):
-        self.dlg.buttonGenerate.enabled = True
+    def changeProduct(self,data):
+        """ the user selected the products """
+        self.selectedProducts = []
+        for row in self.products:
+            for item in data:
+                if row[2] == item:
+                    self.selectedProducts.append(row[0])
+
+        if len(self.selectedProducts) > 0:
+            self.dlg.buttonGenerate.setEnabled(True)
+        else:
+            self.dlg.buttonGenerate.setEnabled(False)
 
     def initData(self):
         """ charge the basic data form database when is first screen load or the database target change """
-        
-        #Verify if the tables exist in the database
-        self.dlg.comboBoxDrone.clear()
-        self.dlg.comboBoxCultivo.clear()
-        self.dlg.comboBoxConfiguracionDrone.clear()
-        self.dlg.comboBoxProductos.clear()
+        if self.connection is not None:
+            #Verify if the tables exist in the database
+            self.dlg.comboBoxDrone.clear()
+            self.dlg.comboBoxCultivo.clear()
+            self.dlg.comboBoxConfiguracionDrone.clear()
+            self.dlg.comboBoxProductos.clear()
 
-        existsDrones = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'drones');").rows()[0]
-        existsProducts = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'configuraciones');").rows()[0]
-        existsConfiguration = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'productos');").rows()[0]
-        
-        if existsDrones[0] and existsProducts[0] and existsConfiguration[0]:
-            self.drones = self.connection.execSql('select * from drones').rows() 
-            self.crops = self.connection.execSql('select distinct unaccent(cultivo) as cultivo from productos order by cultivo asc ')
+            existsDrones = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'drones');").rows()[0]
+            existsProducts = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'configuraciones');").rows()[0]
+            existsConfiguration = self.connection.execSql("SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema = 'public' AND table_name = 'productos');").rows()[0]
             
-            for i,row in enumerate(self.drones):
-                if i == 0:
-                    self.changeDrone(i)
-                self.dlg.comboBoxDrone.addItem(row[2],row[0])
+            if existsDrones[0] and existsProducts[0] and existsConfiguration[0]:
+                self.drones = self.connection.execSql('select * from drones').rows() 
+                self.crops = self.connection.execSql('select distinct unaccent(cultivo) as cultivo from productos order by cultivo asc ').rows()
+                
+                for i,row in enumerate(self.drones):
+                    if i == 0:
+                        self.changeDrone(i)
+                    self.dlg.comboBoxDrone.addItem(row[2],row[0])
 
-            for i,row in enumerate(self.crops):
-                if i == 0:
-                    self.changeCrop(row[0])
-                self.dlg.comboBoxCultivo.addItem(row[0])
+                for i,row in enumerate(self.crops):
+                    self.dlg.comboBoxCultivo.addItem(row[0])
+                
+                self.changeCrop(0)
+
 
     def run(self):
         """Run method that performs all the real work"""
@@ -311,14 +329,15 @@ class Drone:
             
             self.initData()
 
-            self.dlg.comboBoxBaseDatos.currentTextChanged.connect(self.changeDatabase)
+            self.dlg.comboBoxBaseDatos.activated.connect(self.changeDatabase)
             self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
-            self.dlg.comboBoxCultivo.currentTextChanged.connect(self.changeCrop)
-            self.dlg.comboBoxProductos.checkedItemsChanged.connect(self.enableGenerateResultButton)
+            self.dlg.comboBoxProductos.checkedItemsChanged.connect(self.changeProduct)
             self.dlg.buttonGenerate.clicked.connect(self.generateResults)
+            self.dlg.comboBoxCultivo.activated.connect(self.changeCrop)
+            self.dlg.comboBoxConfiguracionDrone.activated.connect(self.changeDroneConfiguration)
 
-        area = self.getSelectedArea()
-        self.dlg.labelArea.setText("{:.2f}".format(round(area, 2)))
+        self.area = self.getSelectedArea()
+        self.dlg.labelArea.setText("{:.2f}".format(round(self.area, 2)))
         # show the dialog
         self.dlg.show()
 
