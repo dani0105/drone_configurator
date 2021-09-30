@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>747</width>
+    <width>745</width>
     <height>487</height>
    </rect>
   </property>
@@ -271,7 +271,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QListView" name="listView">
+  <widget class="QListWidget" name="listWidget_totalProdsTanque">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -281,7 +281,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListView" name="listView_2">
+  <widget class="QListWidget" name="listWidget_totalProdsAreaTot">
    <property name="geometry">
     <rect>
      <x>280</x>
@@ -291,10 +291,10 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListView" name="listView_3">
+  <widget class="QListWidget" name="listWidget_totalProdsHa">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>520</x>
      <y>280</y>
      <width>191</width>
      <height>161</height>

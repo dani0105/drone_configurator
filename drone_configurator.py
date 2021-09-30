@@ -273,7 +273,7 @@ class Drone:
         self.ui2.exec()
 
         # Place every data in the respective field
-        self.ui2.listViewtotalProdsTanque.addItem(self.report[4])
+        self.ui2.listWidget_totalProdsTanque.addItems(self.report[4])
         # self.dlg.labelConfiguracionDrone.setText("Fin de función")
 
 
