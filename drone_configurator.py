@@ -8,6 +8,7 @@ from .drone_configurator_dialog import DroneDialog
 from .vista_resultados_dialog import ResultsDialog
 import os.path
 import os
+from qgis.PyQt import QtWidgets
 
 class Drone:
     
@@ -267,13 +268,13 @@ class Drone:
 
 
     def displayResults(self):
-        self.dlg.labelProductos.setText("Entró a la función")
-        self.form2 = QtWidgets.QWidget()
         self.ui2 = ResultsDialog()
-        self.ui2.setupUi(self.form2)
-        self.form2.show()
-        self.form2.exec()
-        self.dlg.labelConfiguracionDrone.setText("Fin de función")
+        self.ui2.show()
+        self.ui2.exec()
+
+        # Place every data in the respective field
+        self.ui2.listViewtotalProdsTanque.addItem(self.report[4])
+        # self.dlg.labelConfiguracionDrone.setText("Fin de función")
 
 
     def generateResults(self):
