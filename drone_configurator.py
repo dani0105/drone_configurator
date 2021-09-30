@@ -269,12 +269,17 @@ class Drone:
 
     def displayResults(self):
         self.ui2 = ResultsDialog()
+        prodsTan = self.report[4].split("{")[1].split("}")[0]
+        prodsHa = self.report[6].split("{")[1].split("}")[0]
+        prodsTot = self.report[8].split("{")[1].split("}")[0]
+        # Place every data in the respective field
+        self.ui2.listWidget_totalProdsTanque.addItems(prodsTan.split(","))
+        self.ui2.listWidget_totalProdsHa.addItems(prodsHa.split(","))
+        self.ui2.listWidget_totalProdsAreaTot.addItems(prodsTot.split(","))
+        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + " funcionó") 
+        # self.dlg.labelConfiguracionDrone.setText("Fin de función")
         self.ui2.show()
         self.ui2.exec()
-
-        # Place every data in the respective field
-        self.ui2.listWidget_totalProdsTanque.addItems(self.report[4])
-        # self.dlg.labelConfiguracionDrone.setText("Fin de función")
 
 
     def generateResults(self):
@@ -282,7 +287,7 @@ class Drone:
         if self.connection is not None:
             self.report = self.connection.execSql("select * from generarReportes({},{},Array{}::int[],{})".format(self.selectedConfiguration[0], self.selectedDrone[0], self.selectedProducts, self.area)).rows()[0]
             print(self.report)
-            # displayResults()
+            self.displayResults()
 
     def changeProduct(self,data):
         """ the user selected the products """
