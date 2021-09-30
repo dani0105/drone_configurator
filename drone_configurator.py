@@ -5,6 +5,7 @@ from qgis.PyQt.QtWidgets import QAction
 from qgis.utils import iface
 from .resources import *
 from .drone_configurator_dialog import DroneDialog
+from .vista_resultados_dialog import ResultsDialog
 import os.path
 import os
 
@@ -265,11 +266,22 @@ class Drone:
                 self.dlg.comboBoxProductos.addItem(row[2])
 
 
+    def displayResults(self):
+        self.dlg.labelProductos.setText("Entró a la función")
+        self.form2 = QtWidgets.QWidget()
+        self.ui2 = ResultsDialog()
+        self.ui2.setupUi(self.form2)
+        self.form2.show()
+        self.form2.exec()
+        self.dlg.labelConfiguracionDrone.setText("Fin de función")
+
+
     def generateResults(self):
         """ send the data selected and generate report """
         if self.connection is not None:
             self.report = self.connection.execSql("select * from generarReportes({},{},Array{}::int[],{})".format(self.selectedConfiguration[0], self.selectedDrone[0], self.selectedProducts, self.area)).rows()[0]
             print(self.report)
+            # displayResults()
 
     def changeProduct(self,data):
         """ the user selected the products """
@@ -335,6 +347,7 @@ class Drone:
             self.dlg.buttonGenerate.clicked.connect(self.generateResults)
             self.dlg.comboBoxCultivo.activated.connect(self.changeCrop)
             self.dlg.comboBoxConfiguracionDrone.activated.connect(self.changeDroneConfiguration)
+            self.dlg.pushButtonPre.clicked.connect(self.displayResults)
 
         self.area = self.getSelectedArea()
         self.dlg.labelArea.setText("{:.2f}".format(round(self.area, 2)))
