@@ -241,6 +241,10 @@ class Drone:
             print(row[2], row[3], row[4])
             self.dlg.comboBoxConfiguracionDrone.addItem("Altura:{} Cobertura:{} Volumen:{}".format(row[2], row[3], row[4]))
 
+    def changeDroneConfiguration(self,index):
+        # droneConfiguration, self.droneConfigurationID =
+        pass
+
     def changeDatabase(self,database):
         """ this function is called when the user select another database """
         # store the new database target
@@ -255,6 +259,13 @@ class Drone:
         self.dlg.comboBoxProductos.clear()
         for row in self.products:
             self.dlg.comboBoxProductos.addItem(row[2],row[0])
+
+
+    def generateResults(self):
+        pass
+
+    def enableGenerateResultButton(self):
+        self.dlg.buttonGenerate.enabled = True
 
     def initData(self):
         """ charge the basic data form database when is first screen load or the database target change """
@@ -303,6 +314,8 @@ class Drone:
             self.dlg.comboBoxBaseDatos.currentTextChanged.connect(self.changeDatabase)
             self.dlg.comboBoxDrone.activated.connect(self.changeDrone)
             self.dlg.comboBoxCultivo.currentTextChanged.connect(self.changeCrop)
+            self.dlg.comboBoxProductos.checkedItemsChanged.connect(self.enableGenerateResultButton)
+            self.dlg.buttonGenerate.clicked.connect(self.generateResults)
 
         area = self.getSelectedArea()
         self.dlg.labelArea.setText("{:.2f}".format(round(area, 2)))
