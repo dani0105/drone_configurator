@@ -16,23 +16,17 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>650</x>
-     <y>450</y>
-     <width>81</width>
+     <x>460</x>
+     <y>420</y>
+     <width>211</width>
      <height>32</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Baskerville Old Face</family>
-     <pointsize>11</pointsize>
-    </font>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Close</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>
@@ -41,7 +35,7 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>90</x>
      <y>40</y>
      <width>541</width>
      <height>311</height>
@@ -108,9 +102,6 @@
     </property>
     <property name="editable">
      <bool>true</bool>
-    </property>
-    <property name="maxVisibleItems">
-     <number>20</number>
     </property>
     <property name="insertPolicy">
      <enum>QComboBox::InsertAlphabetically</enum>
@@ -294,7 +285,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>320</x>
      <y>360</y>
      <width>91</width>
      <height>31</height>
@@ -302,7 +293,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Candara</family>
+     <family>Cambria</family>
      <pointsize>12</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -312,37 +303,6 @@
     <string>Generar</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>100</y>
-     <width>221</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">image: url(:/background-image-win1/assets/drone-silhouette-1.png);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-   <property name="textInteractionFlags">
-    <set>Qt::NoTextInteraction</set>
-   </property>
-  </widget>
-  <zorder>label</zorder>
-  <zorder>button_box</zorder>
-  <zorder>frame</zorder>
-  <zorder>labelMostrarArea</zorder>
-  <zorder>labelArea</zorder>
-  <zorder>buttonGenerate</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -351,9 +311,7 @@
    <header>qgscheckablecombobox.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>button_box</sender>
