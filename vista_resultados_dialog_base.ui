@@ -32,7 +32,7 @@
   <widget class="QLabel" name="label_descargasHa">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>20</y>
      <width>311</width>
      <height>21</height>
@@ -41,7 +41,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -54,7 +54,7 @@
   <widget class="QLabel" name="label_llenadasTanqueHa">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>70</y>
      <width>311</width>
      <height>21</height>
@@ -63,7 +63,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -76,7 +76,7 @@
   <widget class="QLabel" name="label_llenadasAreaTot">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>160</y>
      <width>311</width>
      <height>21</height>
@@ -85,7 +85,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -98,7 +98,7 @@
   <widget class="QLabel" name="label_litrosAreaTot">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>110</y>
      <width>311</width>
      <height>21</height>
@@ -107,7 +107,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -142,7 +142,7 @@
   <widget class="QLabel" name="label_aguaAreaTot">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>380</x>
      <y>70</y>
      <width>311</width>
      <height>21</height>
@@ -151,7 +151,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -186,7 +186,7 @@
   <widget class="QLabel" name="label_aguaHa">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>380</x>
      <y>160</y>
      <width>311</width>
      <height>21</height>
@@ -195,7 +195,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -230,7 +230,7 @@
   <widget class="QLabel" name="label_aguaTanque">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>380</x>
      <y>20</y>
      <width>311</width>
      <height>21</height>
@@ -239,7 +239,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -252,7 +252,7 @@
   <widget class="QLabel" name="label_descargasAreaTot">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>380</x>
      <y>120</y>
      <width>311</width>
      <height>21</height>
@@ -261,7 +261,7 @@
    <property name="font">
     <font>
      <family>Lato</family>
-     <pointsize>8</pointsize>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -280,6 +280,14 @@
      <height>161</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QListWidget" name="listWidget_totalProdsAreaTot">
    <property name="geometry">
@@ -289,6 +297,14 @@
      <width>191</width>
      <height>161</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QListWidget" name="listWidget_totalProdsHa">
@@ -300,9 +316,54 @@
      <height>161</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>140</y>
+     <width>381</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">image: url(:/background-image-win1/assets/drone-silhouette-2.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <zorder>label</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder>label_descargasHa</zorder>
+  <zorder>label_llenadasTanqueHa</zorder>
+  <zorder>label_llenadasAreaTot</zorder>
+  <zorder>label_litrosAreaTot</zorder>
+  <zorder>label_totalProdsHa</zorder>
+  <zorder>label_aguaAreaTot</zorder>
+  <zorder>label_totalProdsTanque</zorder>
+  <zorder>label_aguaHa</zorder>
+  <zorder>label_totalProdsAreaTot</zorder>
+  <zorder>label_aguaTanque</zorder>
+  <zorder>label_descargasAreaTot</zorder>
+  <zorder>listWidget_totalProdsTanque</zorder>
+  <zorder>listWidget_totalProdsAreaTot</zorder>
+  <zorder>listWidget_totalProdsHa</zorder>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
