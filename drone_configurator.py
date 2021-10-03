@@ -272,27 +272,36 @@ class Drone:
         self.ui2 = ResultsDialog()
 
         # Place every data in the respective field
-        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + str(self.report[0]))
-        self.ui2.label_llenadasTanqueHa.setText(self.ui2.label_llenadasTanqueHa.text() + str(self.report[1]))
-        self.ui2.label_litrosAreaTot.setText(self.ui2.label_litrosAreaTot.text() + str(self.report[2]))
-        self.ui2.label_llenadasAreaTot.setText(self.ui2.label_llenadasAreaTot.text() + str(self.report[3]))
+        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + " " + str(self.report[0]))
+        self.ui2.label_llenadasTanqueHa.setText(self.ui2.label_llenadasTanqueHa.text() + " " + str(self.report[1]))
+        self.ui2.label_litrosAreaTot.setText(self.ui2.label_litrosAreaTot.text() + " " + str(self.report[2]))
+        self.ui2.label_llenadasAreaTot.setText(self.ui2.label_llenadasAreaTot.text() + " " + str(self.report[3]))
 
             # Split the data to rearrange it and display it in the list
-        prodsTan = self.report[4].split("{")[1].split("}")[0]
-        self.ui2.listWidget_totalProdsTanque.addItems(prodsTan.split(","))
+        prodsTan_RawData = self.report[4].split("{")[1].split("}")[0]
+        prodsTan = prodsTan_RawData.split(",")
+        for i in range(len(prodsTan)):
+            prodsTan[i] = str(round(float(prodsTan[i]),3))
+        self.ui2.listWidget_totalProdsTanque.addItems(prodsTan)
 
-        self.ui2.label_aguaTanque.setText(self.ui2.label_aguaTanque.text() + str(self.report[5]))
+        self.ui2.label_aguaTanque.setText(self.ui2.label_aguaTanque.text() + " " + str(self.report[5]))
 
-        prodsHa = self.report[6].split("{")[1].split("}")[0]
-        self.ui2.listWidget_totalProdsHa.addItems(prodsHa.split(","))
+        prodsHa_RawData = self.report[6].split("{")[1].split("}")[0]
+        prodsHa = prodsHa_RawData.split(",")
+        for i in range(len(prodsHa)):
+            prodsHa[i] = str(round(float(prodsHa[i]), 3))
+        self.ui2.listWidget_totalProdsHa.addItems(prodsHa)
 
-        self.ui2.label_aguaHa.setText(self.ui2.label_aguaHa.text() + str(self.report[7]))
+        self.ui2.label_aguaHa.setText(self.ui2.label_aguaHa.text() + " " + (self.report[7]))
 
-        prodsTot = self.report[8].split("{")[1].split("}")[0]
-        self.ui2.listWidget_totalProdsAreaTot.addItems(prodsTot.split(","))
+        prodsTot_RawData = self.report[8].split("{")[1].split("}")[0]
+        prodsTot = prodsTot_RawData.split(",")
+        for i in range(len(prodsTot)):
+            prodsTot[i] = str(round(float(prodsTot[i]), 3))
+        self.ui2.listWidget_totalProdsAreaTot.addItems(prodsTot)
 
-        self.ui2.label_aguaAreaTot.setText(self.ui2.label_aguaAreaTot.text() + str(self.report[9]))
-        self.ui2.label_descargasAreaTot.setText(self.ui2.label_descargasAreaTot.text() + str(self.report[10]))
+        self.ui2.label_aguaAreaTot.setText(self.ui2.label_aguaAreaTot.text() + " " + str(self.report[9]))
+        self.ui2.label_descargasAreaTot.setText(self.ui2.label_descargasAreaTot.text() + " " + str(self.report[10]))
 
         # Show and execute the secondary window
         self.ui2.show()
