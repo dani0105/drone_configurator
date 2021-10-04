@@ -272,36 +272,36 @@ class Drone:
         self.ui2 = ResultsDialog()
 
         # Place every data in the respective field
-        self.ui2.label_descargasHa.setText(self.ui2.label_descargasHa.text() + " " + str(self.report[0]))
-        self.ui2.label_llenadasTanqueHa.setText(self.ui2.label_llenadasTanqueHa.text() + " " + str(self.report[1]))
-        self.ui2.label_litrosAreaTot.setText(self.ui2.label_litrosAreaTot.text() + " " + str(self.report[2]))
-        self.ui2.label_llenadasAreaTot.setText(self.ui2.label_llenadasAreaTot.text() + " " + str(self.report[3]))
+        self.ui2.label_descargasHa.setText("Descargas por hectarea (L/Ha): {:.4f}".format(round(self.report[0], 4)))
+        self.ui2.label_llenadasTanqueHa.setText("Llenadas de tanque por hectarea (T/Ha): {:.4f}".format(round(self.report[1], 4)))
+        self.ui2.label_litrosAreaTot.setText("Total descarga sobre area total (L/Area): {:.4f}".format(round(self.report[2], 4)))
+        self.ui2.label_llenadasAreaTot.setText("Llenadas de tanque por area total (T/Area): {:.4f}".format(round(self.report[3], 4)))
 
             # Split the data to rearrange it and display it in the list
         prodsTan_RawData = self.report[4].split("{")[1].split("}")[0]
         prodsTan = prodsTan_RawData.split(",")
         for i in range(len(prodsTan)):
-            prodsTan[i] = str(round(float(prodsTan[i]),3))
+            prodsTan[i] = str(round(float(prodsTan[i]),4))
         self.ui2.listWidget_totalProdsTanque.addItems(prodsTan)
 
-        self.ui2.label_aguaTanque.setText(self.ui2.label_aguaTanque.text() + " " + str(self.report[5]))
+        self.ui2.label_aguaTanque.setText("Total de agua por tanque (L/T): {:.4f}".format(round(self.report[5], 4)))
 
         prodsHa_RawData = self.report[6].split("{")[1].split("}")[0]
         prodsHa = prodsHa_RawData.split(",")
         for i in range(len(prodsHa)):
-            prodsHa[i] = str(round(float(prodsHa[i]), 3))
+            prodsHa[i] = str(round(float(prodsHa[i]), 4))
         self.ui2.listWidget_totalProdsHa.addItems(prodsHa)
 
-        self.ui2.label_aguaHa.setText(self.ui2.label_aguaHa.text() + " " + (self.report[7]))
+        self.ui2.label_aguaHa.setText("Total de agua por hectarea (L/Ha): {:.4f}".format(round(self.report[7], 4)))
 
         prodsTot_RawData = self.report[8].split("{")[1].split("}")[0]
         prodsTot = prodsTot_RawData.split(",")
         for i in range(len(prodsTot)):
-            prodsTot[i] = str(round(float(prodsTot[i]), 3))
+            prodsTot[i] = str(round(float(prodsTot[i]), 4))
         self.ui2.listWidget_totalProdsAreaTot.addItems(prodsTot)
 
-        self.ui2.label_aguaAreaTot.setText(self.ui2.label_aguaAreaTot.text() + " " + str(self.report[9]))
-        self.ui2.label_descargasAreaTot.setText(self.ui2.label_descargasAreaTot.text() + " " + str(self.report[10]))
+        self.ui2.label_aguaAreaTot.setText("Total de agua por area total (L/Ha): {:.4f}".format(round(self.report[9], 4)))
+        self.ui2.label_descargasAreaTot.setText("Total de descargar por area total (L/Ha): {:.4f}".format(round(self.report[10], 4)))
 
         # Show and execute the secondary window
         self.ui2.show()
@@ -380,7 +380,7 @@ class Drone:
             self.dlg.comboBoxCultivo.activated.connect(self.changeCrop)
             self.dlg.comboBoxConfiguracionDrone.activated.connect(self.changeDroneConfiguration)
 
-        self.area = self.getSelectedArea()
+        self.area = self.getSelectedArea() / 10000
         self.dlg.labelArea.setText("{:.2f}".format(round(self.area, 2)))
         # show the dialog
         self.dlg.show()

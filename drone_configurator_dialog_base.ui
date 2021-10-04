@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>460</x>
-     <y>420</y>
-     <width>211</width>
+     <x>640</x>
+     <y>440</y>
+     <width>81</width>
      <height>32</height>
     </rect>
    </property>
@@ -26,7 +26,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Close</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>
@@ -251,7 +251,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Área seleccionada (m²):</string>
+    <string>Área seleccionada (Ha²):</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
